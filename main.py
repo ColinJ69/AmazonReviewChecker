@@ -1,4 +1,9 @@
 from bs4 import BeautifulSoup as bs
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import BernoulliNB
+import numpy as np
 import requests
 
 def get_comments(URL):
@@ -18,12 +23,12 @@ def get_comments(URL):
         result.remove(i)
 
   return result
-def get_sentiment():
-  response = requests.get("personal_dataset.not_public")
+def get_sentiment(item):
+  response = requests.get("https://github.com/ColinJ69/AmazonReviewChecker/raw/main/Book%201%20(2).xlsx")
   data = pd.read_excel(response.content,usecols = [0,1])
 
-  x = np.array(data["Text"])
-  y = np.array(data["Label"])
+  x = np.array(data["text"])
+  y = np.array(data["tone"])
 
   cv = CountVectorizer()
   X = cv.fit_transform(x)
@@ -34,7 +39,7 @@ def get_sentiment():
   fit = model.fit(xtrain, ytrain)
 
   lit = []
-  e = get_posts(user)
+  e = get_reviews(item)
   for i in e:
     data = cv.transform([i]).toarray()
     output = fit.predict(data)
