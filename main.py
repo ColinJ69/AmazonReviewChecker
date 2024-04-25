@@ -5,6 +5,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import BernoulliNB
 import numpy as np
 import requests
+import nltk
+nltk.download('stopwords')
+stemmer = nltk.SnowballStemmer("english")
+from nltk.corpus import stopwords
+stopword=set(stopwords.words('english'))
+import math
 
 def get_comments(URL):
 
@@ -23,8 +29,9 @@ def get_comments(URL):
         result.remove(i)
 
   return result
+  
 def get_sentiment(item):
-  response = requests.get("https://github.com/ColinJ69/AmazonReviewChecker/raw/main/Book%201%20(2).xlsx")
+  response = requests.get("https://github.com/ColinJ69/AmazonReviewChecker/raw/main/Book%201%20(4).xlsx")
   data = pd.read_excel(response.content,usecols = [0,1])
 
   x = np.array(data["text"])
@@ -41,8 +48,13 @@ def get_sentiment(item):
   lit = []
   e = get_reviews(item)
   for i in e:
-    data = cv.transform([i]).toarray()
-    output = fit.predict(data)
-    lit.append(output.item())
-  return lit
+    while len(lit) < 50:
+      data = cv.transform([i]).toarray()
+      output = fit.predict(data)
+      lit.append(output.item())
+      
+  if sorted(lit)[math.ceil(len(lit) * 0.75)] == 0:
+    return 0
+  else:
+    return 1
 
