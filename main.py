@@ -35,5 +35,11 @@ def get_sentiment(item):
           results.append(1)
          else:
           results.append(0)
-    return sorted(results)[math.ceil(len(results)*0.5)]
+    avg = sorted(results)[math.ceil(len(results)*0.5)]
+    if avg == 0:
+      return'negative'
+    elif avg == 1:
+      return 'neutral'
+    else:
+      return 'positive'
     
