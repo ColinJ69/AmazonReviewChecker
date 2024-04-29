@@ -1,1 +1,1 @@
-Not finished
+Checks sentiment on reviews from amazon products
